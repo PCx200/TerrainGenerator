@@ -6,11 +6,13 @@ using UnityEngine;
 public class TerrainGenerator : MonoBehaviour
 {
     [Header("Terrain Properties")]
+    [SerializeField] int seed;
+
     [SerializeField, Range(10, 100)] private int width;
     [SerializeField, Range(10, 100)] private int height;
 
     [SerializeField, Range(0.01f, 1.0f)] private float noiseScale;
-    [SerializeField, Range(1.0f, 10.0f)] private float heightMultiplier;
+    [SerializeField, Range(1.0f, 20.0f)] private float heightMultiplier;
 
     [SerializeField, Range(1, 5)] private int octavesCount;
     [SerializeField] private float lacunarity; // frequency of the octaves
@@ -32,7 +34,8 @@ public class TerrainGenerator : MonoBehaviour
 
     void Start()
     {
-       GenerateTerrain();
+        seed = Random.Range(-1000000, 1000000);
+        GenerateTerrain();
     }
 
     void Update()
@@ -64,7 +67,7 @@ public class TerrainGenerator : MonoBehaviour
                     float frequency = Mathf.Pow(lacunarity, i);
                     float amplitude = Mathf.Pow(persistence, i);
 
-                    y += Mathf.PerlinNoise(x * noiseScale * frequency, z * noiseScale * frequency) * amplitude;
+                    y += Mathf.PerlinNoise((x + seed) * noiseScale * frequency, (z + seed) * noiseScale * frequency) * amplitude;
                 }
 
                 y *= heightMultiplier;
